@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <link rel="preload" href="./fonts/lobster-v28-latin_cyrillic-regular.woff2" as="font" crossorigin>
   <link rel="icon" type="image/svg+xml" href="img/logo.svg">
   <link rel="icon" type="image/png" href="img/favicon.png">
 
@@ -38,8 +39,17 @@
     <div class="timer">
       <div class="header">
         <h1 class="header__title">Помодоро</h1>
+        <picture>
+          <!-- <source srcset="./img/logo@2x.png" media="(min-width: 800px)"> // разное изображение для ретино дисплеев
+          <source srcset="./img/logo@4x.png" media="(min-width: 1200px)"> -->
 
-        <img src="img/logo.svg" alt="Логотип">
+          <!-- <source srcset="./img/logo.avif, ./img/logo@4x.avif 4x" type="image/avif"> // еще вариант подключения
+          <source srcset="./img/logo.webp, ./img/logo@4x.webp 4x" type="image/webp">
+          <img src="img/logo.svg" srcset="./img/logo@2x.png 2x" alt="Логотип"> -->
+
+
+          <img src="img/logo.svg" alt="Логотип">
+        </picture>
       </div>
 
       <div class="navigation">

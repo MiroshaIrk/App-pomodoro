@@ -7,6 +7,7 @@
     /* Chrome 26+, Opera 23+, Firefox 39+ */
     url('../fonts/lobster-v28-latin_cyrillic-regular.woff') format('woff');
   /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+  font-display: swap;
 }
 
 html {
@@ -127,10 +128,18 @@ iframe {
 }
 
 .time {
+  display: grid;
+  grid-template-columns: 150px min-content 150px;
+  align-self: center;
   font-size: 120px;
   color: #F85959;
   text-align: center;
   margin-bottom: 60px;
+}
+
+.time__minutes,
+.time__seconds {
+  max-width: 150px;
 }
 
 .title {
