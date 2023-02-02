@@ -9,3 +9,7 @@ const audio = {
 export const alarm = () => {
   audio[stateTimer.status].play();
 }
+
+export const stopAlarm = () => {
+  audio[stateTimer.status].pause();
+}

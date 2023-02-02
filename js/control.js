@@ -1,3 +1,4 @@
+import { stopAlarm } from "./alarm.js";
 import { stateTimer } from "./state.js";
 import { startTimer, showTime } from "./timer.js";
 import { removeClass, addClass } from "./util.js";
@@ -9,6 +10,7 @@ const navigationBtns = document.querySelectorAll('.navigation__btn');
 
 
 export const changeActiveBtn = (dataUse) => {
+  stateTimer.status = dataUse;
   navigationBtns.forEach(btn => {
     btn.dataset.use === dataUse ?
       addClass(btn, 'navigation__btn_active') :
@@ -16,25 +18,15 @@ export const changeActiveBtn = (dataUse) => {
   });
 };
 
-const changeHandler = (event) => {
-  const dataUse = event.target.dataset.use;
-
-  navigationBtns.forEach(btn => {
-    removeClass(btn, 'navigation__btn_active');
-  });
-  addClass(event.target, 'navigation__btn_active');
-  stateTimer.status = dataUse;
-  stateTimer.timeLeft = stateTimer[stateTimer.status] * 60;
-
+const changeBtn = () => navigationBtns.forEach(btn => btn.addEventListener('click', () => {
+  changeActiveBtn(btn.dataset.use);
   stopTimer();
-  showTime(stateTimer.timeLeft);
-}
-
-const changeBtn = () => navigationBtns.forEach(btn => btn.addEventListener('click', changeHandler));
+}));
 
 const stopTimer = () => {
   clearTimeout(stateTimer.timerId);
   stateTimer.isActive = false;
+  stopAlarm();
   btnStart.textContent = 'Старт';
   stateTimer.timeLeft = stateTimer[stateTimer.status] * 60;
   showTime(stateTimer.timeLeft);

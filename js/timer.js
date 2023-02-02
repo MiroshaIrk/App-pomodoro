@@ -15,7 +15,7 @@ export const showTime = (seconds) => {
 }
 
 export const startTimer = () => {
-  stateTimer.timeLeft -= 5;
+  stateTimer.timeLeft -= 15;
 
 
   showTime(stateTimer.timeLeft);
