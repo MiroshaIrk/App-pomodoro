@@ -1,6 +1,6 @@
 
-const WORK_TIME = 2;
-const BREAK_TIME = 1;
+const WORK_TIME = 25;
+const BREAK_TIME = 5;
 const RELAX_TIME = 20;
 
 export const stateTimer = {

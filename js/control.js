@@ -23,7 +23,7 @@ const changeBtn = () => navigationBtns.forEach(btn => btn.addEventListener('clic
   stopTimer();
 }));
 
-const stopTimer = () => {
+export const stopTimer = () => {
   clearTimeout(stateTimer.timerId);
   stateTimer.isActive = false;
   stopAlarm();

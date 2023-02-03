@@ -2,11 +2,12 @@ import { stateTimer } from "./state.js";
 import { alarm } from "./alarm.js";
 import { addZero } from "./util.js";
 import { changeActiveBtn } from "./control.js";
+import { showTodo, updateTodo } from "./todo.js";
 
 
 const minutesElement = document.querySelector('.time__minutes');
 const secondsElement = document.querySelector('.time__seconds');
-
+const title = document.title;
 
 
 export const showTime = (seconds) => {
@@ -15,19 +16,28 @@ export const showTime = (seconds) => {
 }
 
 export const startTimer = () => {
-  stateTimer.timeLeft -= 15;
+  const countDown = new Date().getTime() + stateTimer.timeLeft * 1000;
 
+  stateTimer.timerId = setInterval(() => {
+    stateTimer.timeLeft -= 15;
+    showTime(stateTimer.timeLeft);
+    document.title = stateTimer.timeLeft;
 
-  showTime(stateTimer.timeLeft);
+    if (!(stateTimer.timeLeft % 5)) {
+      const now = new Date().getTime();
+      stateTimer.timeLeft = Math.floor((countDown - now) / 1000);
+    }
 
-  if (stateTimer.timeLeft > 0 && stateTimer.isActive) {
-    stateTimer.timerId = setTimeout(startTimer, 1000);
-  }
+    if (stateTimer.timeLeft > 0 && stateTimer.isActive) {
+      return;
+    }
 
-  if (stateTimer.timeLeft <= 0) {
+    document.title = title;
 
     if (stateTimer.status === 'work') {
+      console.log(stateTimer.activeTodo)
       stateTimer.activeTodo.pomodoro += 1;
+      updateTodo(stateTimer.activeTodo);
 
       if (stateTimer.activeTodo.pomodoro % stateTimer.count) {
         stateTimer.status = 'break';
@@ -41,9 +51,8 @@ export const startTimer = () => {
 
     alarm();
     stateTimer.timeLeft = stateTimer[stateTimer.status] * 60;
-
     changeActiveBtn(stateTimer.status);
+    showTodo();
     startTimer();
-  }
-
+  }, 1000);
 }

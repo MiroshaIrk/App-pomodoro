@@ -1,6 +1,6 @@
+import { changeActiveBtn, stopTimer } from "./control.js";
 import { stateTimer } from "./state.js";
 import { addClass } from "./util.js";
-
 
 
 const titleElem = document.querySelector('.title');
@@ -16,25 +16,41 @@ todoAddBtn.textContent = 'Добавить новую задачу';
 li.append(todoAddBtn);
 
 
-
 const getTodo = () => {
   const todoList = JSON.parse(localStorage.getItem('pomodoro') || '[]');
 
   return todoList;
-}
+};
 
 const addTodo = (title) => {
   const todo = {
     title,
     pomodoro: 0,
     id: Math.random().toString().substring(2, 8),
-  }
-
+  };
   const todoList = getTodo();
   todoList.push(todo);
-
   localStorage.setItem('pomodoro', JSON.stringify(todoList));
   return todo;
+};
+
+export const updateTodo = (todo) => {
+  const todoList = getTodo();
+  const todoItem = todoList.find(item => item.id === todo.id);
+  todoItem.title = todo.title;
+  todoItem.pomodoro = todo.pomodoro;
+  localStorage.setItem('pomodoro', JSON.stringify(todoList));
+};
+
+const deleteTodo = (todo) => {
+  const todoList = getTodo();
+  const newTodoList = todoList.filter(item => item.id !== todo.id);
+
+  if (todo.id === stateTimer.activeTodo.id) {
+    stateTimer.activeTodo = newTodoList[newTodoList.length - 1];
+  }
+
+  localStorage.setItem('pomodoro', JSON.stringify(newTodoList));
 }
 
 const createTodoItem = todo => {
@@ -62,30 +78,23 @@ const createTodoItem = todo => {
     todoBtn.addEventListener('click', () => {
       stateTimer.activeTodo = todo;
       showTodo();
-    })
+      changeActiveBtn('work');
+      stopTimer();
+    });
     editBtn.addEventListener('click', () => {
-      const title = prompt('Введите название задачи');
-      const todoList = getTodo();
-      console.log(todo.id)
-      todoList.forEach(todoItem => {
-        if (todoItem.id === todo.id) todoItem.title = title
-      });
-      localStorage.setItem('pomodoro', JSON.stringify(todoList));
-      stateTimer.activeTodo = todoList[todoList.length - 1];
+      todo.title = prompt('Введите название задачи', todo.title);
+      todoBtn.textContent = todo.title;
+      if (todo.id === stateTimer.activeTodo.id) {
+        stateTimer.activeTodo.title = todo.title;
+      }
+      updateTodo(todo);
       showTodo();
-      renderTodoList(todoList);
-    })
+    });
     delBtn.addEventListener('click', () => {
-      let todoList = getTodo();
-
-      todoList = todoList.filter(todoItem => {
-        if (todoItem.id !== todo.id) return todoItem;
-      });
-      stateTimer.activeTodo = todoList[todoList.length - 1];
-      localStorage.setItem('pomodoro', JSON.stringify(todoList));
+      deleteTodo(todo);
+      todoItem.remove(todo);
       showTodo();
-      renderTodoList(todoList);
-    })
+    });
   }
 }
 
@@ -95,30 +104,37 @@ const renderTodoList = (list) => {
   todoListElem.append(li);
 }
 
-const showTodo = () => {
-  titleElem.textContent = stateTimer.activeTodo.title;
-  countElem.textContent = stateTimer.activeTodo.pomodoro;
+export const showTodo = () => {
+
+  if (stateTimer.activeTodo) {
+    titleElem.textContent = stateTimer.activeTodo.title;
+    countElem.textContent = stateTimer.activeTodo.pomodoro;
+  } else {
+    titleElem.textContent = '';
+    countElem.textContent = 0;
+  }
+
 }
 
 export const initTodo = () => {
   const todoList = getTodo();
 
   if (!todoList.length) {
-    stateTimer.activeTodo = [{
+    stateTimer.activeTodo = {
       id: 'default',
       pomodoro: 0,
       title: 'Помодоро'
-    }]
+    };
   } else {
     stateTimer.activeTodo = todoList[todoList.length - 1];
   }
 
   showTodo();
   renderTodoList(todoList);
+
   todoAddBtn.addEventListener('click', () => {
-    const title = prompt('Введите название задачи');
+    const title = prompt('Введите название задачи')?.trim();
     const todo = addTodo(title);
     createTodoItem(todo);
-  })
-  // console.log(stateTimer.activeTodo);
+  });
 }
