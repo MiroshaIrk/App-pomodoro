@@ -19,7 +19,7 @@ export const startTimer = () => {
   const countDown = new Date().getTime() + stateTimer.timeLeft * 1000;
 
   stateTimer.timerId = setInterval(() => {
-    stateTimer.timeLeft -= 15;
+    stateTimer.timeLeft -= 1;
     showTime(stateTimer.timeLeft);
     document.title = stateTimer.timeLeft;
 
@@ -33,6 +33,7 @@ export const startTimer = () => {
     }
 
     document.title = title;
+    clearTimeout(stateTimer.timerId);
 
     if (stateTimer.status === 'work') {
       console.log(stateTimer.activeTodo)
