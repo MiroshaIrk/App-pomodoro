@@ -1,2 +1,2 @@
 # pomodoro
-Приложение (Pomodoro)[https://pomodoro-omega-rose.vercel.app/] 
+Приложение [Pomodoro](https://pomodoro-omega-rose.vercel.app/) 
